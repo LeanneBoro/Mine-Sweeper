@@ -47,34 +47,54 @@ function findMineNegs(board, rowIdx, colIdx) {
     return count
 }
 
+// function addMines(row, col) {
+//     const indexes = findSpotsForMines(row, col)
+//     for (var i = 0; i < indexes.length; i++) {
+//         var currIdx = indexes[i]
+//         gBoard[currIdx.i][currIdx.j].isMine = true
+//     }
+// }
+
 function addMines(row, col) {
-    const indexes = findSpotsForMines(row, col)
-    for (var i = 0; i < indexes.length; i++) {
-        var currIdx = indexes[i]
-        gBoard[currIdx.i][currIdx.j].isMine = true
-    }
-}
-
-
-function findSpotsForMines(row, col) {
     var isFound
     const indexes = []
 
     for (var i = 0; i < gLevel.MINES; i++) {
-        
+
         while (!isFound) {
             var randI = getRandomInt(0, gLevel.SIZE)
             var randJ = getRandomInt(0, gLevel.SIZE)
             if (randI !== row && randJ !== col) {
-                indexes.push({ i: randI, j: randJ })
-                if (indexes.length > 1) {
-                    if (indexes[i].i === indexes[i-1].i && indexes[i].j === indexes[i-1].j)
-                    return
+                if (!gBoard[randI][randJ].isMine) {
+                    gBoard[randI][randJ].isMine = true
+                    isFound = true
                 }
-                isFound = true
             }
         }
         isFound = false
     }
-    return indexes
+}
+
+function startTimer() {
+    if (gTimerInterval) clearInterval(gTimerInterval)
+
+    const startTime = Date.now()
+    gTimerInterval = setInterval(() => {
+        const timeDiff = Date.now() - startTime
+        const seconds = getFormatSeconds(timeDiff)
+        const milliSeconds = getFormatMilliSeconds(timeDiff)
+        document.querySelector('span.seconds').innerText = seconds
+        document.querySelector('span.milli-seconds').innerText = milliSeconds
+    }, 10)
+}
+
+
+function getFormatSeconds(timeDiff) {
+    const seconds = Math.floor(timeDiff / 1000)
+    return (seconds + '').padStart(2, '0')
+}
+
+function getFormatMilliSeconds(timeDiff) {
+    const milliSeconds = new Date(timeDiff).getMilliseconds()
+    return (milliSeconds + '').padStart(3, '0')
 }
