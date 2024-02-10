@@ -1,6 +1,6 @@
 body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    background-image: url("../../IMG-20191201-WA0017.jpg");
+    background-image: url("/img/IMG20191201WA0017.jpg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     min-height: 100vh;
@@ -42,7 +42,7 @@ td img {
 }
 
 .hidden {
-    background-image: url("../../img/f3d1e7e98275271c381f00217515b07c.jpg");
+    background-image: url("../img/...f3d1e7e98275271c381f00217515b07c.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
