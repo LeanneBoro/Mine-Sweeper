@@ -1,8 +1,7 @@
 'use strict'
 
 const gLevel = { SIZE: 4, MINES: 2 }
-const MINE = '💣'
-
+const MINE = '<img src="img/images.png">'
 
 function buildBoard() {
 

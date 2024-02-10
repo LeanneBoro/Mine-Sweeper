@@ -2,12 +2,10 @@
 
 var gBoard
 const gGame = { isOn: false, shownCount: 0, markedCount: 0, secsPassed: 0 }
-const SMILEY = '😆'
-const SAD = '😭'
-const VICTORY = '😎'
+const SMILEY = '<img src="img/alien.png">'
+const SAD = '<img src="img/sadalien.jpg">'
+const VICTORY = '<img src="img/1f47d.gif">'
 const FLAG = '🚩'
-const HINTOFF = '💡'
-const HINTON = '🚨'
 // var gLives
 
 var gSafeClicks
@@ -23,6 +21,7 @@ var gTimerInterval
 var gIsDarkMode
 
 function onInit() {
+    document.querySelector('.user-msg').innerHTML = " "
     clearInterval(gTimerInterval)
     gExterminated = false
     gManualMode = false
@@ -33,12 +32,11 @@ function onInit() {
     megaIdx = []
     gIsDarkMode = false
     // gLives = 3
-    // document.querySelector('.life').innerHTML = gLives
+    // document.querySelector('.lives').innerHTML = gLives
     gGame.isOn = false
     gBoard = buildBoard()
     renderBoard(gBoard)
     document.querySelector('.smiley').innerHTML = SMILEY
-    document.querySelector('.bulb').innerHTML = HINTOFF
 }
 
 function renderBoard(board) {
@@ -82,10 +80,6 @@ function onCellMarked(elCell, eve) {
     }
 }
 function onCellClicked(elCell) {
-    if (checkWin()) {
-        document.querySelector('.smiley').innerHTML = VICTORY
-        gManualHap = false
-    }
     if (gIsHint) {
         showHint(elCell)
         return
@@ -117,10 +111,11 @@ function onCellClicked(elCell) {
         else elCell.innerHTML = gBoard[rowIdx][colIdx].minesAroundCount
     }
     if (gBoard[rowIdx][colIdx].isMine) {
+        if (gBoard[rowIdx][colIdx].isShown) return
         elCell.innerHTML = MINE
         elCell.classList.remove('hidden')
         gBoard[rowIdx][colIdx].isShown = true
-        handelMine()
+        gameOver()
     } else {
         gBoard[rowIdx][colIdx].isShown = true
         if (!gBoard[rowIdx][colIdx].minesAroundCount) elCell.innerHTML = " "
@@ -128,34 +123,34 @@ function onCellClicked(elCell) {
         elCell.classList.remove('hidden')
         revealNeighs(elCell, rowIdx, colIdx)
     }
-}
-function handelMine() {
-    document.querySelector('.smiley').innerHTML = SAD
-    gManualHap = false
-    showAllMines()
-    // gLives--
-    // document.querySelector('.life').innerHTML = gLives
-}
-
-function showAllMines() {
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[0].length; j++) {
-            if (gBoard[i][j].isMine) {
-                gBoard[i][j].isShown = true
-                var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
-                elCell.innerHTML = MINE
-                elCell.classList.remove('hidden')
-            }
-        }
+    if (checkWin()) {
+        document.querySelector('.smiley').innerHTML = VICTORY
+        document.querySelector('.user-msg').innerHTML = 'you won!!'
+        gManualHap = false
+        clearInterval(gTimerInterval)
     }
 }
+// function handelMine() {
+//     showAllMines()
 
+//     // gLives--
+//     // document.querySelector('.lives').innerHTML = gLives
+//     // if (!gLives) gameOver()
+// }
+
+function gameOver() {
+    showAllMines()
+    document.querySelector('.smiley').innerHTML = SAD
+    gManualHap = false
+    clearInterval(gTimerInterval)
+    document.querySelector('.user-msg').innerHTML = 'game over! try again?'
+}
 function checkWin() {
     for (var i = 0; i < (gBoard.length); i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
             const currCell = gBoard[i][j]
+            if (gBoard[i][j].isMine) if (!gBoard[i][j].isMarked) return false
             if (!currCell.isMine && !currCell.isShown) return false
-            // else if (currCell.isMine && !currCell.isMarked) return false
         }
     }
     return true
@@ -163,17 +158,19 @@ function checkWin() {
 
 function activateHint() {
     if (!gGame.isOn || !gHintCount) return
-    document.querySelector('.bulb').innerHTML = HINTON
     gIsHint = true
-    console.log(gHintCount)
     gHintCount--
+    document.querySelector('.user-msg').innerHTML = `you have ${gHintCount} hints left!`
+    setTimeout(() =>
+        document.querySelector('.user-msg').innerHTML = " "
+        , 1500)
 }
+
 function showHint(elCell) {
     const rowIdx = +elCell.dataset.i
     const colIdx = +elCell.dataset.j
 
     showHideShown(gBoard, rowIdx, colIdx)
-    document.querySelector('.bulb').innerHTML = HINTOFF
     gIsHint = false
 }
 
@@ -213,6 +210,10 @@ function safeClick() {
     }
         , 1000)
     gSafeClicks--
+    document.querySelector('.user-msg').innerHTML = `you have ${gSafeClicks} safe clicks left!`
+    setTimeout(() =>
+        document.querySelector('.user-msg').innerHTML = " "
+        , 1500)
 }
 
 function onManualMines() {
@@ -220,6 +221,7 @@ function onManualMines() {
         gManualMode = true
         gManualHap = true
         gMineIdx = []
+        document.querySelector('.user-msg').innerHTML = "click on the cells you want to turn into mines,then click on the alien to play!"
     }
 }
 
@@ -313,8 +315,17 @@ function darkMode() {
     const elBody = document.querySelector('body')
     if (!gIsDarkMode) {
         elBody.style.filter = 'brightness(70%)'
+        // elBody.style.backgroundImage = 'brightness(0%)'
+        elBody.style.background = 'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(/img/IMG-20191201-WA0017.jpg)'
+        elBody.style.backgroundRepeat = 'no-repeat'
+        elBody.style.backgroundSize = '100% 100%'
+        elBody.style.minHeight = '100vh'
         gIsDarkMode = true
     } else {
+        elBody.style.backgroundImage = 'url(/img/IMG-20191201-WA0017.jpg)'
+        elBody.style.backgroundRepeat = 'no-repeat'
+        elBody.style.backgroundSize = '100% 100%'
+        elBody.style.minHeight = '100vh'
         elBody.style.filter = 'brightness(100%)'
         gIsDarkMode = false
     }

@@ -17,6 +17,20 @@ function revealNeighs(elCell, rowIdx, colIdx) {
     }
 }
 
+function showAllMines() {
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            if (gBoard[i][j].isMine) {
+                gBoard[i][j].isShown = true
+                var elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+                elCell.innerHTML = MINE
+                elCell.classList.remove('hidden')
+            }
+        }
+    }
+}
+
+
 function expandShown(gBoard, rowIdx, colIdx) {
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
         if (i < 0 || i >= gBoard.length) continue
@@ -38,14 +52,19 @@ function expandShown(gBoard, rowIdx, colIdx) {
 //     var currCell = gBoard[rowIdx][colIdx]
 //     if (rowIdx < 0 || rowIdx >= gBoard.length || colIdx < 0 || colIdx >= gBoard[0].length)
 //         return
-//     if (currCell.isMine) return
-//     // condition
-//     fullExpand(gBoard, rowIdx++, colIdx++)
+//     if (currCell.isMine)
+//         // condition
+//         currCell = fullExpand(gBoard, rowIdx++, colIdx++)
 //     // what to do every time we run   
 //     currCell = gBoard[rowIdx++][colIdx++]
+//     console.log(currCell)
 //     currCell.isShown = true
-//     document.querySelector(`[data-i="${i}"][data-j="${j}"]`).innerHTML = gBoard[rowIdx++][rowIdx++].minesAroundCount
 
+//     return {
+//         rowIdx,
+//         colIdx
+//     }
+//     // document.querySelector(`[data-i="${rowIdx++}"][data-j="${colIdx++}"]`).innerHTML = gBoard[rowIdx++][colIdx++].minesAroundCount
 // }
 
 function findAllMines() {
