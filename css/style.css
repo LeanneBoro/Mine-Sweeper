@@ -1,6 +1,6 @@
 body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    background-image: "../img/IMG-20191201-WA0017.jpg";
+    background-image: url("../IMG-20191201-WA0017.jpg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     min-height: 100vh;
@@ -42,7 +42,7 @@ td img {
 }
 
 .hidden {
-    background-image: "../img/f3d1e7e98275271c381f00217515b07c.jpg";
+    background-image: url("../img/f3d1e7e98275271c381f00217515b07c.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -59,7 +59,7 @@ button {
     font-size: 20px;
     padding: 5px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-    background-image: "../img/hint.png";
+    background-image: url("../img/hint.png");
     border-radius: 10%;
     font-weight: bold;
 }
